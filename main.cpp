@@ -21,12 +21,12 @@ int main() {
     for (int i = 0; i < memory_size; i++)
         std::cout << "0x" << std::uppercase << std::hex << i << ": " << std::bitset<8>(memory[i]) << std::endl;
 
-    std::cout << "CHIP-8 Data Registers:" << std::endl;
+    std::cout << std::endl << "CHIP-8 Data Registers:" << std::endl;
     for (int i = 0; i < registers_size; i++) {
         std::cout << "V" << std::uppercase << std::hex << i << ": " << std::bitset<8>(registers[i]) << std::endl;
     }
 
-    std::cout << "CHIP-8 Addressing Register:" << std::endl << "I: " << std::bitset<16>(I) << std::endl;
+    std::cout << std::endl << "CHIP-8 Addressing Register:" << std::endl << "I: " << std::bitset<16>(I) << std::endl;
 
     return 0;
 }
