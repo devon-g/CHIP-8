@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/devon/repos/CHIP-8/build",
+  "command": "/usr/bin/clang++   -g -o CMakeFiles/CHIP_8.dir/main.cpp.o -c /home/devon/repos/CHIP-8/main.cpp",
+  "file": "/home/devon/repos/CHIP-8/main.cpp"
+},
+{
+  "directory": "/home/devon/repos/CHIP-8/build",
+  "command": "/usr/bin/clang++   -g -o CMakeFiles/CHIP_8.dir/CHIP8.cpp.o -c /home/devon/repos/CHIP-8/CHIP8.cpp",
+  "file": "/home/devon/repos/CHIP-8/CHIP8.cpp"
+}
+]
