@@ -11,45 +11,45 @@
 class CHIP8
 {
 public:
-	// Sizes of CHIP8 memory components
-	static const unsigned int MEMORY_SIZE = 4096;
-	static const unsigned int N_REGISTERS = 16;
-	static const unsigned int STACK_SIZE = 16;
-	static const unsigned int SCREEN_WIDTH = 64;
-	static const unsigned int SCREEN_HEIGHT = 32;
-	static const unsigned int FONTSET_SIZE = 80;
-	static const unsigned int FONTSET_START_ADDRESS = 0x50;
-	static const unsigned int PROGRAM_START_ADDRESS = 0x200;
+    // Sizes of CHIP8 memory components
+    static const unsigned int MEMORY_SIZE = 4096;
+    static const unsigned int N_REGISTERS = 16;
+    static const unsigned int STACK_SIZE = 16;
+    static const unsigned int SCREEN_WIDTH = 64;
+    static const unsigned int SCREEN_HEIGHT = 32;
+    static const unsigned int FONTSET_SIZE = 80;
+    static const unsigned int FONTSET_START_ADDRESS = 0x50;
+    static const unsigned int PROGRAM_START_ADDRESS = 0x200;
 
-	CHIP8();
-	~CHIP8();
-	void dump();
-	void load_rom(const char* filename);
+    CHIP8();
+    ~CHIP8();
+    void dump();
+    void load_rom(const char* filename);
 
-	// System memory (4kbs)
-	uint8_t* memory;
+    // System memory (4kbs)
+    uint8_t* memory;
 
-	// Miscellaneous Registers
-	uint8_t* V;
+    // Miscellaneous Registers
+    uint8_t* V;
 
-	// Stack (for returning from subroutines)
-	uint16_t* stack;
+    // Stack (for returning from subroutines)
+    uint16_t* stack;
 
-	// Video buffer
-	uint8_t* screen;
+    // Video buffer
+    uint8_t* screen;
 
-	// Program counter (starts at memory address 0x200)
-	uint16_t PC;
+    // Program counter (starts at memory address 0x200)
+    uint16_t PC;
 
-	// Stack pointer
-	uint16_t SP;
+    // Stack pointer
+    uint16_t SP;
 
-	// Addressing Register
-	uint16_t I;
+    // Addressing Register
+    uint16_t I;
 
-	// Special sound and delay timer V
-	uint8_t DT;
-	uint8_t ST;
+    // Special sound and delay timer V
+    uint8_t DT;
+    uint8_t ST;
 };
 
 

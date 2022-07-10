@@ -11,7 +11,7 @@ CMakeFiles/CHIP_8.dir/main.cpp.o: /home/devon/repos/CHIP-8/main.cpp \
   /usr/include/bits/typesizes.h /usr/include/bits/time64.h \
   /usr/include/bits/types/clock_t.h /usr/include/bits/types/clockid_t.h \
   /usr/include/bits/types/time_t.h /usr/include/bits/types/timer_t.h \
-  /usr/lib/clang/13.0.1/include/stddef.h /usr/include/bits/stdint-intn.h \
+  /usr/lib/clang/14.0.6/include/stddef.h /usr/include/bits/stdint-intn.h \
   /usr/include/endian.h /usr/include/bits/endian.h \
   /usr/include/bits/endianness.h /usr/include/bits/byteswap.h \
   /usr/include/bits/uintn-identity.h /usr/include/sys/select.h \
@@ -25,7 +25,7 @@ CMakeFiles/CHIP_8.dir/main.cpp.o: /home/devon/repos/CHIP-8/main.cpp \
   /usr/include/bits/atomic_wide_counter.h \
   /usr/include/bits/struct_mutex.h /usr/include/bits/struct_rwlock.h \
   /usr/include/stdio.h /usr/include/bits/libc-header-start.h \
-  /usr/lib/clang/13.0.1/include/stdarg.h \
+  /usr/lib/clang/14.0.6/include/stdarg.h \
   /usr/include/bits/types/__fpos_t.h \
   /usr/include/bits/types/__mbstate_t.h \
   /usr/include/bits/types/__fpos64_t.h /usr/include/bits/types/__FILE.h \
@@ -43,12 +43,12 @@ CMakeFiles/CHIP_8.dir/main.cpp.o: /home/devon/repos/CHIP-8/main.cpp \
   /usr/include/bits/types/__locale_t.h /usr/include/alloca.h \
   /usr/include/bits/stdlib-float.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/12.1.0/../../../../include/c++/12.1.0/bits/std_abs.h \
-  /usr/lib/clang/13.0.1/include/__stddef_max_align_t.h \
+  /usr/lib/clang/14.0.6/include/__stddef_max_align_t.h \
   /usr/include/string.h /usr/include/strings.h /usr/include/wchar.h \
   /usr/include/bits/wchar.h /usr/include/bits/types/wint_t.h \
   /usr/include/bits/types/mbstate_t.h \
-  /usr/lib/clang/13.0.1/include/inttypes.h /usr/include/inttypes.h \
-  /usr/lib/clang/13.0.1/include/stdint.h /usr/include/stdint.h \
+  /usr/lib/clang/14.0.6/include/inttypes.h /usr/include/inttypes.h \
+  /usr/lib/clang/14.0.6/include/stdint.h /usr/include/stdint.h \
   /usr/include/bits/stdint-uintn.h /usr/include/ctype.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/12.1.0/../../../../include/c++/12.1.0/math.h \
   /usr/bin/../lib64/gcc/x86_64-pc-linux-gnu/12.1.0/../../../../include/c++/12.1.0/cmath \
@@ -60,91 +60,92 @@ CMakeFiles/CHIP_8.dir/main.cpp.o: /home/devon/repos/CHIP-8/main.cpp \
   /usr/include/bits/fp-fast.h \
   /usr/include/bits/mathcalls-helper-functions.h \
   /usr/include/bits/mathcalls.h /usr/include/bits/mathcalls-narrow.h \
-  /usr/include/bits/iscanonical.h /usr/lib/clang/13.0.1/include/float.h \
+  /usr/include/bits/iscanonical.h /usr/lib/clang/14.0.6/include/float.h \
   /usr/include/SDL2/SDL_assert.h /usr/include/SDL2/SDL_atomic.h \
   /usr/include/SDL2/SDL_audio.h /usr/include/SDL2/SDL_error.h \
   /usr/include/SDL2/SDL_endian.h /usr/include/SDL2/SDL_mutex.h \
   /usr/include/SDL2/SDL_thread.h /usr/include/SDL2/SDL_rwops.h \
   /usr/include/SDL2/SDL_clipboard.h /usr/include/SDL2/SDL_cpuinfo.h \
-  /usr/lib/clang/13.0.1/include/immintrin.h \
-  /usr/lib/clang/13.0.1/include/x86gprintrin.h \
-  /usr/lib/clang/13.0.1/include/hresetintrin.h \
-  /usr/lib/clang/13.0.1/include/uintrintrin.h \
-  /usr/lib/clang/13.0.1/include/mmintrin.h \
-  /usr/lib/clang/13.0.1/include/xmmintrin.h \
-  /usr/lib/clang/13.0.1/include/mm_malloc.h \
-  /usr/lib/clang/13.0.1/include/emmintrin.h \
-  /usr/lib/clang/13.0.1/include/pmmintrin.h \
-  /usr/lib/clang/13.0.1/include/tmmintrin.h \
-  /usr/lib/clang/13.0.1/include/smmintrin.h \
-  /usr/lib/clang/13.0.1/include/popcntintrin.h \
-  /usr/lib/clang/13.0.1/include/wmmintrin.h \
-  /usr/lib/clang/13.0.1/include/__wmmintrin_aes.h \
-  /usr/lib/clang/13.0.1/include/__wmmintrin_pclmul.h \
-  /usr/lib/clang/13.0.1/include/clflushoptintrin.h \
-  /usr/lib/clang/13.0.1/include/clwbintrin.h \
-  /usr/lib/clang/13.0.1/include/avxintrin.h \
-  /usr/lib/clang/13.0.1/include/avx2intrin.h \
-  /usr/lib/clang/13.0.1/include/f16cintrin.h \
-  /usr/lib/clang/13.0.1/include/bmiintrin.h \
-  /usr/lib/clang/13.0.1/include/bmi2intrin.h \
-  /usr/lib/clang/13.0.1/include/lzcntintrin.h \
-  /usr/lib/clang/13.0.1/include/fmaintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512fintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vlintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512bwintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512bitalgintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512cdintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vpopcntdqintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vpopcntdqvlintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vnniintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vlvnniintrin.h \
-  /usr/lib/clang/13.0.1/include/avxvnniintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512dqintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vlbitalgintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vlbwintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vlcdintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vldqintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512erintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512ifmaintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512ifmavlintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vbmiintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vbmivlintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vbmi2intrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vlvbmi2intrin.h \
-  /usr/lib/clang/13.0.1/include/avx512pfintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512bf16intrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vlbf16intrin.h \
-  /usr/lib/clang/13.0.1/include/pkuintrin.h \
-  /usr/lib/clang/13.0.1/include/vpclmulqdqintrin.h \
-  /usr/lib/clang/13.0.1/include/vaesintrin.h \
-  /usr/lib/clang/13.0.1/include/gfniintrin.h \
-  /usr/lib/clang/13.0.1/include/rtmintrin.h \
-  /usr/lib/clang/13.0.1/include/xtestintrin.h \
-  /usr/lib/clang/13.0.1/include/shaintrin.h \
-  /usr/lib/clang/13.0.1/include/fxsrintrin.h \
-  /usr/lib/clang/13.0.1/include/xsaveintrin.h \
-  /usr/lib/clang/13.0.1/include/xsaveoptintrin.h \
-  /usr/lib/clang/13.0.1/include/xsavecintrin.h \
-  /usr/lib/clang/13.0.1/include/xsavesintrin.h \
-  /usr/lib/clang/13.0.1/include/cetintrin.h \
-  /usr/lib/clang/13.0.1/include/adxintrin.h \
-  /usr/lib/clang/13.0.1/include/rdseedintrin.h \
-  /usr/lib/clang/13.0.1/include/wbnoinvdintrin.h \
-  /usr/lib/clang/13.0.1/include/cldemoteintrin.h \
-  /usr/lib/clang/13.0.1/include/waitpkgintrin.h \
-  /usr/lib/clang/13.0.1/include/movdirintrin.h \
-  /usr/lib/clang/13.0.1/include/pconfigintrin.h \
-  /usr/lib/clang/13.0.1/include/sgxintrin.h \
-  /usr/lib/clang/13.0.1/include/ptwriteintrin.h \
-  /usr/lib/clang/13.0.1/include/invpcidintrin.h \
-  /usr/lib/clang/13.0.1/include/keylockerintrin.h \
-  /usr/lib/clang/13.0.1/include/amxintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vp2intersectintrin.h \
-  /usr/lib/clang/13.0.1/include/avx512vlvp2intersectintrin.h \
-  /usr/lib/clang/13.0.1/include/enqcmdintrin.h \
-  /usr/lib/clang/13.0.1/include/serializeintrin.h \
-  /usr/lib/clang/13.0.1/include/tsxldtrkintrin.h \
+  /usr/lib/clang/14.0.6/include/immintrin.h \
+  /usr/lib/clang/14.0.6/include/x86gprintrin.h \
+  /usr/lib/clang/14.0.6/include/hresetintrin.h \
+  /usr/lib/clang/14.0.6/include/uintrintrin.h \
+  /usr/lib/clang/14.0.6/include/crc32intrin.h \
+  /usr/lib/clang/14.0.6/include/mmintrin.h \
+  /usr/lib/clang/14.0.6/include/xmmintrin.h \
+  /usr/lib/clang/14.0.6/include/mm_malloc.h \
+  /usr/lib/clang/14.0.6/include/emmintrin.h \
+  /usr/lib/clang/14.0.6/include/pmmintrin.h \
+  /usr/lib/clang/14.0.6/include/tmmintrin.h \
+  /usr/lib/clang/14.0.6/include/smmintrin.h \
+  /usr/lib/clang/14.0.6/include/popcntintrin.h \
+  /usr/lib/clang/14.0.6/include/wmmintrin.h \
+  /usr/lib/clang/14.0.6/include/__wmmintrin_aes.h \
+  /usr/lib/clang/14.0.6/include/__wmmintrin_pclmul.h \
+  /usr/lib/clang/14.0.6/include/clflushoptintrin.h \
+  /usr/lib/clang/14.0.6/include/clwbintrin.h \
+  /usr/lib/clang/14.0.6/include/avxintrin.h \
+  /usr/lib/clang/14.0.6/include/avx2intrin.h \
+  /usr/lib/clang/14.0.6/include/f16cintrin.h \
+  /usr/lib/clang/14.0.6/include/bmiintrin.h \
+  /usr/lib/clang/14.0.6/include/bmi2intrin.h \
+  /usr/lib/clang/14.0.6/include/lzcntintrin.h \
+  /usr/lib/clang/14.0.6/include/fmaintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512fintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vlintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512bwintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512bitalgintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512cdintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vpopcntdqintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vpopcntdqvlintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vnniintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vlvnniintrin.h \
+  /usr/lib/clang/14.0.6/include/avxvnniintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512dqintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vlbitalgintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vlbwintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vlcdintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vldqintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512erintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512ifmaintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512ifmavlintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vbmiintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vbmivlintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vbmi2intrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vlvbmi2intrin.h \
+  /usr/lib/clang/14.0.6/include/avx512pfintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512bf16intrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vlbf16intrin.h \
+  /usr/lib/clang/14.0.6/include/pkuintrin.h \
+  /usr/lib/clang/14.0.6/include/vpclmulqdqintrin.h \
+  /usr/lib/clang/14.0.6/include/vaesintrin.h \
+  /usr/lib/clang/14.0.6/include/gfniintrin.h \
+  /usr/lib/clang/14.0.6/include/rtmintrin.h \
+  /usr/lib/clang/14.0.6/include/xtestintrin.h \
+  /usr/lib/clang/14.0.6/include/shaintrin.h \
+  /usr/lib/clang/14.0.6/include/fxsrintrin.h \
+  /usr/lib/clang/14.0.6/include/xsaveintrin.h \
+  /usr/lib/clang/14.0.6/include/xsaveoptintrin.h \
+  /usr/lib/clang/14.0.6/include/xsavecintrin.h \
+  /usr/lib/clang/14.0.6/include/xsavesintrin.h \
+  /usr/lib/clang/14.0.6/include/cetintrin.h \
+  /usr/lib/clang/14.0.6/include/adxintrin.h \
+  /usr/lib/clang/14.0.6/include/rdseedintrin.h \
+  /usr/lib/clang/14.0.6/include/wbnoinvdintrin.h \
+  /usr/lib/clang/14.0.6/include/cldemoteintrin.h \
+  /usr/lib/clang/14.0.6/include/waitpkgintrin.h \
+  /usr/lib/clang/14.0.6/include/movdirintrin.h \
+  /usr/lib/clang/14.0.6/include/pconfigintrin.h \
+  /usr/lib/clang/14.0.6/include/sgxintrin.h \
+  /usr/lib/clang/14.0.6/include/ptwriteintrin.h \
+  /usr/lib/clang/14.0.6/include/invpcidintrin.h \
+  /usr/lib/clang/14.0.6/include/keylockerintrin.h \
+  /usr/lib/clang/14.0.6/include/amxintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vp2intersectintrin.h \
+  /usr/lib/clang/14.0.6/include/avx512vlvp2intersectintrin.h \
+  /usr/lib/clang/14.0.6/include/enqcmdintrin.h \
+  /usr/lib/clang/14.0.6/include/serializeintrin.h \
+  /usr/lib/clang/14.0.6/include/tsxldtrkintrin.h \
   /usr/include/SDL2/SDL_events.h /usr/include/SDL2/SDL_video.h \
   /usr/include/SDL2/SDL_pixels.h /usr/include/SDL2/SDL_rect.h \
   /usr/include/SDL2/SDL_surface.h /usr/include/SDL2/SDL_blendmode.h \
