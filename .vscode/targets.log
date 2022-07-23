@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun Jul 10 12:09:15 2022
+# Make data base, printed on Mon Jul 11 12:16:25 2022
 
 # Variables
 
@@ -69,7 +69,7 @@ MAKEFILE_LIST :=
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 4252
+VSCODE_PID = 4163
 # environment
 XDG_SESSION_TYPE = tty
 # automatic
@@ -107,7 +107,7 @@ MOTD_SHOWN = pam
 # environment
 GRADLE_HOME = /usr/share/java/gradle
 # environment
-INVOCATION_ID = 30f4db204a884b7e8cf3d75a26c7d0e0
+INVOCATION_ID = c2b95c12017f43eb9fea6acb515416de
 # environment
 _JAVA_AWT_WM_NONREPARENTING = 1
 # automatic
@@ -127,7 +127,7 @@ XDG_VTNR = 1
 # makefile
 .DEFAULT_GOAL := 
 # environment
-SYSTEMD_EXEC_PID = 698
+SYSTEMD_EXEC_PID = 714
 # environment
 EDITOR = nvim
 # environment
@@ -237,6 +237,6 @@ GNUmakefile:
 # strcache performance: lookups = 22 / hit rate = 13%
 # hash-table stats:
 # Load=19/8192=0%, Rehash=0, Collisions=0/22=0%
-# Finished Make data base on Sun Jul 10 12:09:15 2022
+# Finished Make data base on Mon Jul 11 12:16:25 2022
 
  
