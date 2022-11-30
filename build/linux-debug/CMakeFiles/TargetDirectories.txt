@@ -1,3 +1,0 @@
-/home/devon/repos/CHIP-8/build/linux-debug/CMakeFiles/CHIP_8.dir
-/home/devon/repos/CHIP-8/build/linux-debug/CMakeFiles/edit_cache.dir
-/home/devon/repos/CHIP-8/build/linux-debug/CMakeFiles/rebuild_cache.dir
