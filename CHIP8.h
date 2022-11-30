@@ -25,7 +25,10 @@ public:
     ~CHIP8();
     void dump();
     void load_rom(const char* filename);
+    void advance();
+    void set_pressed_key(uint8_t pressed_key);
 
+private:
     // System memory (4kbs)
     uint8_t* memory;
 
@@ -37,6 +40,8 @@ public:
 
     // Video buffer
     uint8_t* screen;
+    // TODO: Keyboard stuff
+    uint8_t pressed_key;
 
     // Program counter (starts at memory address 0x200)
     uint16_t PC;
