@@ -1,3 +1,4 @@
 # Ignore build files and caches
 build/
 .cache/
+compile_commands.json
