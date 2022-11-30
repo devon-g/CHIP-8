@@ -40,7 +40,7 @@ CHIP8::CHIP8() {
 
   // Apply above font
   for (int i = 0; i < CHIP8::FONTSET_SIZE; i++)
-    this->memory[i + CHIP8::FONTSET_START_ADDRESS] = font[i];
+    this->memory[CHIP8::FONTSET_START_ADDRESS + i] = font[i];
 }
 
 CHIP8::~CHIP8() {
@@ -398,4 +398,8 @@ void CHIP8::advance() {
       break;
     }
   }
+}
+
+void CHIP8::set_pressed_key(uint8_t pressed_key) {
+  this->pressed_key = pressed_key;
 }
