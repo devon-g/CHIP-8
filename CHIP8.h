@@ -5,57 +5,45 @@
 #ifndef CHIP_8_CHIP8_H
 #define CHIP_8_CHIP8_H
 
-#include <cstdio>
-#include <fstream>
+#include <array>
+#include <cinttypes>
 
-class CHIP8
-{
+class CHIP8 {
 public:
-    // Sizes of CHIP8 memory components
-    static const unsigned int MEMORY_SIZE = 4096;
-    static const unsigned int N_REGISTERS = 16;
-    static const unsigned int STACK_SIZE = 16;
-    static const unsigned int SCREEN_WIDTH = 64;
-    static const unsigned int SCREEN_HEIGHT = 32;
-    static const unsigned int FONTSET_SIZE = 80;
-    static const unsigned int FONTSET_START_ADDRESS = 0x50;
-    static const unsigned int PROGRAM_START_ADDRESS = 0x200;
+  static const unsigned int screen_width = 64;
+  static const unsigned int screen_height = 32;
+  static const unsigned int fontset_size = 80;
 
-    CHIP8();
-    ~CHIP8();
-    void dump();
-    void load_rom(const char* filename);
-    void advance();
-    void set_pressed_key(uint8_t pressed_key);
+  static const unsigned int fontset_start_address = 0x50;
+  static const unsigned int program_start_address = 0x200;
 
-private:
-    // System memory (4kbs)
-    uint8_t* memory;
+  CHIP8();
+  void load_rom(const char *filename);
+  void toggle_legacy();
+  void advance();
 
-    // Miscellaneous Registers
-    uint8_t* V;
+//private:
+  // System memory (4kbs)
+  std::array<uint8_t, 4096> memory{};
+  // Miscellaneous Registers
+  std::array<uint8_t, 16> V{};
+  // Stack (for returning from subroutines)
+  std::array<uint16_t, 16> stack{};
+  // Video buffer
+  std::array<bool, CHIP8::screen_width * CHIP8::screen_height> screen{};
 
-    // Stack (for returning from subroutines)
-    uint16_t* stack;
-
-    // Video buffer
-    uint8_t* screen;
-    // TODO: Keyboard stuff
-    uint8_t pressed_key;
-
-    // Program counter (starts at memory address 0x200)
-    uint16_t PC;
-
-    // Stack pointer
-    uint16_t SP;
-
-    // Addressing Register
-    uint16_t I;
-
-    // Special sound and delay timer V
-    uint8_t DT;
-    uint8_t ST;
+  // Program counter (starts at memory address 0x200)
+  uint16_t PC;
+  // Stack pointer
+  uint8_t SP;
+  // Addressing Register
+  uint16_t I;
+  // Special sound and delay timer V
+  uint8_t DT;
+  uint8_t ST;
+  // Shift instructions differ based on time period
+  // Use this toggle to switch between legacy and modern
+  bool legacy_shift;
 };
 
-
-#endif //CHIP_8_CHIP8_H
+#endif // CHIP_8_CHIP8_H
