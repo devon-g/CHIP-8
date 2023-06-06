@@ -74,15 +74,11 @@ void CHIP8::load_rom(const char *filename) {
 void CHIP8::advance() {
   // Execute one instruction
   if (this->PC < 0xFFF) {
-    std::cout << std::hex << "PC: 0x" << this->PC << std::endl;
     // Fetch the current instruction.
     // Instructions are two bytes long and stored most-significant-byte first.
     // The first byte of each instruction should be located at an even address.
     uint8_t high_byte = this->memory[this->PC];
     uint8_t low_byte = this->memory[this->PC + 1];
-
-    std::cout << std::hex << "INSTRUCTION: 0x" << ((high_byte << 8) | low_byte)
-              << std::endl;
 
     // Increment to next instruction
     this->PC += 2;

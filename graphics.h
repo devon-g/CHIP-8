@@ -1,20 +1,15 @@
-#ifndef GRAPHICSSDL_H
-#define GRAPHICSSDL_H
+#ifndef GRAPHICS_H
+#define GRAPHICS_H
 
 #include <SDL2/SDL.h>
 #include <string>
 
-class GraphicsSDL {
-public:
-  GraphicsSDL(std::string title, uint w, uint h);
-  ~GraphicsSDL();
-
-  const SDL_Window *get_window();
-  const SDL_Renderer *get_renderer();
-
-private:
+struct SDL {
   SDL_Window *window;
   SDL_Renderer *renderer;
 };
+
+SDL init_sdl(std::string title, uint w, uint h);
+void shutdown_sdl(SDL sdl);
 
 #endif
