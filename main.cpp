@@ -3,13 +3,13 @@
 //
 
 #include "CHIP8.h"
+#include <SDL2/SDL.h>
 #include <iomanip>
 #include <iostream>
 
 int main(int argc, char **argv) {
   CHIP8 c8;
   c8.load_rom(argv[1]);
-  c8.toggle_legacy();
 
   bool quit = false;
   int idx = 0;
@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
     }
     for (int y = 0; y < CHIP8::screen_height; y++) {
       for (int x = 0; x < CHIP8::screen_width; x++)
-        std::cout << (c8.screen[CHIP8::screen_width * y + x] ? '#' : ' ');
+        std::cout << (c8.display[CHIP8::screen_width * y + x] ? "█" : " ");
       std::cout << '\n';
     }
     std::cout << std::flush;

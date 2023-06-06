@@ -8,6 +8,7 @@
 #include <array>
 #include <cinttypes>
 
+
 class CHIP8 {
 public:
   static const unsigned int screen_width = 64;
@@ -19,10 +20,10 @@ public:
 
   CHIP8();
   void load_rom(const char *filename);
-  void toggle_legacy();
   void advance();
+  std::array<bool, CHIP8::screen_width * CHIP8::screen_height> get_display();
 
-//private:
+// private:
   // System memory (4kbs)
   std::array<uint8_t, 4096> memory{};
   // Miscellaneous Registers
@@ -30,7 +31,7 @@ public:
   // Stack (for returning from subroutines)
   std::array<uint16_t, 16> stack{};
   // Video buffer
-  std::array<bool, CHIP8::screen_width * CHIP8::screen_height> screen{};
+  std::array<bool, CHIP8::screen_width * CHIP8::screen_height> display{};
 
   // Program counter (starts at memory address 0x200)
   uint16_t PC;
@@ -38,12 +39,9 @@ public:
   uint8_t SP;
   // Addressing Register
   uint16_t I;
-  // Special sound and delay timer V
-  uint8_t DT;
-  uint8_t ST;
-  // Shift instructions differ based on time period
-  // Use this toggle to switch between legacy and modern
-  bool legacy_shift;
+  // Special timers
+  uint8_t DT; // Delay
+  uint8_t ST; // Sound
 };
 
 #endif // CHIP_8_CHIP8_H
