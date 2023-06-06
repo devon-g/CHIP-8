@@ -1,43 +1,33 @@
-//
-// Created by devon on 5/2/22.
-//
-
 #include "CHIP8.h"
+#include "graphics.h"
 #include <SDL2/SDL.h>
-#include <iomanip>
 #include <iostream>
 
 int main(int argc, char **argv) {
+  const uint cell_size = 20;
+  const uint window_width = cell_size * CHIP8::screen_width;
+  const uint window_height = cell_size * CHIP8::screen_height;
+
+  GraphicsSDL sdl("CHIP-8", window_width, window_height);
+  SDL_Event event;
+
   CHIP8 c8;
   c8.load_rom(argv[1]);
 
   bool quit = false;
-  int idx = 0;
   while (!quit) {
-    // Draw screen contents to terminal
-    for (int i = 0; i < 50; i++) {
-      std::cout << '\n';
+    // Non blocking polling for sdl2 events
+    // (e.g. key presses, x button to quit, etc)
+    while (SDL_PollEvent(&event)) {
+      switch (event.type) {
+      case SDL_QUIT:
+        quit = true;
+      }
     }
-    for (int y = 0; y < CHIP8::screen_height; y++) {
-      for (int x = 0; x < CHIP8::screen_width; x++)
-        std::cout << (c8.display[CHIP8::screen_width * y + x] ? "█" : " ");
-      std::cout << '\n';
-    }
-    std::cout << std::flush;
+
+    // Interpret next instruction from rom
     c8.advance();
   }
-
-  // int stride = 16;
-  // std::cout << std::hex << std::setfill('0') << std::uppercase;
-  // for (int i = 0; i < c8.memory.size(); i += stride) {
-  //   std::cout << "0x" << std::setw(3) << i << ":\t";
-  //   for (int j = 0; j < stride; j++) {
-  //     std::cout << "0x" << std::setw(2)
-  //               << unsigned(c8.memory[i + j])
-  //               << '\t';
-  //   }
-  //   std::cout << std::endl;
-  // }
 
   return 0;
 }

@@ -8,7 +8,6 @@
 #include <array>
 #include <cinttypes>
 
-
 class CHIP8 {
 public:
   static const unsigned int screen_width = 64;
@@ -21,9 +20,10 @@ public:
   CHIP8();
   void load_rom(const char *filename);
   void advance();
-  std::array<bool, CHIP8::screen_width * CHIP8::screen_height> get_display();
+  const std::array<bool, CHIP8::screen_width * CHIP8::screen_height> &
+  get_display();
 
-// private:
+private:
   // System memory (4kbs)
   std::array<uint8_t, 4096> memory{};
   // Miscellaneous Registers

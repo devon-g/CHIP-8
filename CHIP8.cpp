@@ -41,7 +41,7 @@ CHIP8::CHIP8() {
     this->memory[CHIP8::fontset_start_address + i] = font[i];
 }
 
-std::array<bool, CHIP8::screen_width * CHIP8::screen_height>
+const std::array<bool, CHIP8::screen_width * CHIP8::screen_height> &
 CHIP8::get_display() {
   return this->display;
 }
