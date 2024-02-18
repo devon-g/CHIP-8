@@ -98,6 +98,7 @@ void CHIP8::step() {
     // Decode current instruction
 
     unsigned int flag;
+    Key pressed_key;
     switch (T) {
     case 0x0:
       int flag;
@@ -281,14 +282,16 @@ void CHIP8::step() {
     case 0xE:
       switch (NN) {
       case (0x9E): // EX9E - SKP
-        // TODO: Need to implement keyboard handling first
         // Skip next instruction if key with the value of VX is pressed
-        std::cerr << "[ERROR] Instruction EX9E not implemented..." << std::endl;
+        pressed_key = this->keyboard->get_pressed_key();
+        if (pressed_key != Key::NONE && pressed_key == this->V[X])
+          this->PC += 2;
         break;
       case (0xA1): // EXA1 - SKNP VX
-        // TODO: Need to implement keyboard handling first
         // Skip next instruction if key with the value of VX is not pressed
-        std::cerr << "[ERROR] Instruction EXA1 not implemented..." << std::endl;
+        pressed_key = this->keyboard->get_pressed_key();
+        if (pressed_key != Key::NONE && pressed_key != this->V[X])
+          this->PC += 2;
         break;
       default:
         break;
@@ -301,9 +304,13 @@ void CHIP8::step() {
         this->V[X] = this->DT;
         break;
       case 0x0A: // FX0A - LD VX, K
-        // TODO: Need to implement keyboard handling first
         // Wait for key press then save value to VX
-        std::cerr << "[ERROR] Instruction FX0A not implemented..." << std::endl;
+        while (true) {
+          pressed_key = this->keyboard->get_pressed_key();
+          if (pressed_key != Key::NONE)
+            break;
+        }
+        this->V[X] = pressed_key;
         break;
       case 0x15: // FX15 - LD DT, VX
         // FX15 - LD DT, VX

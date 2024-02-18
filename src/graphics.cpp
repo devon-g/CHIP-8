@@ -1,4 +1,7 @@
 #include "graphics.h"
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_sdlrenderer2.h"
+#include "imgui.h"
 #include <iostream>
 
 SDL init_sdl(std::string title, uint w, uint h) {
@@ -21,10 +24,24 @@ SDL init_sdl(std::string title, uint w, uint h) {
   SDL_GetRendererInfo(renderer, &info);
   std::cout << "[INFO] SDL_Renderer: " << info.name << std::endl;
 
-  return {window, renderer};
+  // Set up ImGui stuff
+  ImGui::CreateContext();
+  ImGuiIO &io = ImGui::GetIO();
+  (void)io;
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+
+  ImGui::StyleColorsDark();
+  ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
+  ImGui_ImplSDLRenderer2_Init(renderer);
+
+  return {window, renderer, io};
 }
 
 void shutdown_sdl(SDL sdl) {
+  ImGui_ImplSDLRenderer2_Shutdown();
+  ImGui_ImplSDL2_Shutdown();
+  ImGui::DestroyContext();
   SDL_DestroyRenderer(sdl.renderer);
   SDL_DestroyWindow(sdl.window);
   SDL_Quit();
