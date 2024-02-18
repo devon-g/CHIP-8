@@ -1,37 +1,31 @@
-//
-// Created by devon on 6/22/22.
-//
-
 #ifndef CHIP8_H
 #define CHIP8_H
 
+#include "display.h"
+#include "keyboard.h"
 #include <array>
 #include <cinttypes>
 
 class CHIP8 {
 public:
-  static const unsigned int screen_width = 64;
-  static const unsigned int screen_height = 32;
   static const unsigned int fontset_size = 80;
-
   static const unsigned int fontset_start_address = 0x50;
   static const unsigned int program_start_address = 0x200;
 
-  CHIP8();
+  CHIP8(Display *display, Keyboard *keyboard);
   void load_rom(const char *filename);
   void step();
-  const std::array<bool, CHIP8::screen_width * CHIP8::screen_height> &
-  get_display();
 
 private:
+  // Periferals
+  Display *display;
+  Keyboard *keyboard;
   // System memory (4kbs)
   std::array<uint8_t, 4096> memory{};
   // Miscellaneous Registers
   std::array<uint8_t, 16> V{};
   // Stack (for returning from subroutines)
   std::array<uint16_t, 16> stack{};
-  // Video buffer
-  std::array<bool, CHIP8::screen_width * CHIP8::screen_height> display{};
 
   // Program counter (starts at memory address 0x200)
   uint16_t PC;

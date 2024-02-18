@@ -4,7 +4,8 @@ project(CHIP8)
 add_executable(${PROJECT_NAME}
     main.cpp
     CHIP8.cpp
-    graphics.cpp)
+    graphics.cpp
+    display.cpp)
 
 find_package(SDL2)
 

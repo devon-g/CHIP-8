@@ -1,8 +1,14 @@
 #include "CHIP8.h"
+#include "display.h"
+#include "keyboard.h"
 #include <fstream>
 #include <iostream>
 
-CHIP8::CHIP8() {
+CHIP8::CHIP8(Display *display, Keyboard *keyboard) {
+  // Plug in peripherals
+  this->display = display;
+  this->keyboard = keyboard;
+
   // Initialize standalone registers to zero
   this->PC = CHIP8::program_start_address;
   this->SP = 0;
@@ -33,11 +39,6 @@ CHIP8::CHIP8() {
   // Apply above font
   for (int i = 0; i < CHIP8::fontset_size; i++)
     this->memory[CHIP8::fontset_start_address + i] = font[i];
-}
-
-const std::array<bool, CHIP8::screen_width * CHIP8::screen_height> &
-CHIP8::get_display() {
-  return this->display;
 }
 
 void CHIP8::load_rom(const char *filename) {
@@ -103,7 +104,7 @@ void CHIP8::step() {
       switch (NN) {
       case 0xE0: // 00E0 - CLS
         // Clear the display
-        std::fill(this->display.begin(), this->display.end(), false);
+        this->display->clear_buffer();
         break;
       case 0xEE: // 00EE - RET
         // Return from a subroutine
@@ -246,29 +247,34 @@ void CHIP8::step() {
       // Reset VF flag
       this->V[0xF] = 0;
 
-      // Individual pixel coordinate
-      int x;
-      int y;
-
+      // Pixel coordinate
+      int x, y;
       // Go through each byte of the sprite
       // N represents how many bytes make up the sprite
       for (int n = 0; n < N; n++) {
         // Wrap bottom to top
-        y = (this->V[Y] + n) % CHIP8::screen_height;
+        y = (this->V[Y] + n) % this->display->get_height();
         // Grab a byte from the sprite
         uint8_t sprite_byte = this->memory[this->I + n];
         // Go through each bit of sprite byte
         for (int b = 0; b < 8; b++) {
-          x = (this->V[X] + b) % CHIP8::screen_width;
+          x = (this->V[X] + b) % this->display->get_width();
           bool sprite_bit = (sprite_byte >> (7 - b)) & 0b1;
           // When screen and sprite pixels are on, set collision flag
           // because xor causes erasures when both values are on
-          if ((this->display[CHIP8::screen_width * y + x] == 1) &&
-              (sprite_bit == 1))
+          bool pixel = this->display->get_pixel(x, y);
+          if (pixel && sprite_bit)
             this->V[0xF] = 1;
           // XOR bit onto screen
-          this->display[CHIP8::screen_width * y + x] =
-              this->display[CHIP8::screen_width * y + x] != sprite_bit;
+          // pixel | sprite | XOR
+          // --------------------
+          //   0   |   0    |  0
+          //   0   |   1    |  1
+          //   1   |   0    |  1
+          //   1   |   1    |  0
+          // XOR result only changes pixel when sprite is 1
+          if (sprite_bit)
+            this->display->toggle_pixel(x, y);
         }
       }
       break;
