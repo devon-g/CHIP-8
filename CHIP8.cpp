@@ -1,12 +1,6 @@
-//
-// Created by devon on 6/22/22.
-//
-
 #include "CHIP8.h"
 #include <fstream>
 #include <iostream>
-#include <iterator>
-#include <vector>
 
 CHIP8::CHIP8() {
   // Initialize standalone registers to zero
@@ -67,11 +61,11 @@ void CHIP8::load_rom(const char *filename) {
 
     delete[] rom_data;
   } else {
-    std::cerr << "Failed to load rom" << std::endl;
+    std::cerr << "[ERROR] Failed to load rom" << std::endl;
   }
 }
 
-void CHIP8::advance() {
+void CHIP8::step() {
   // Execute one instruction
   if (this->PC < 0xFFF) {
     // Fetch the current instruction.
@@ -91,19 +85,22 @@ void CHIP8::advance() {
     // X: 0x0F00
     // Y: 0x00F0
     // N: 0x000F
-    // KK: 0x00FF
+    // NN: 0x00FF
     // NNN: 0x0FFF
-    uint8_t T = (high_byte & 0xF0) >> 4;
-    uint8_t X = high_byte & 0x0F;
-    uint8_t Y = (low_byte & 0xF0) >> 4;
-    uint8_t N = low_byte & 0x0F;
-    uint8_t KK = low_byte;
-    uint16_t NNN = ((high_byte << 8) | low_byte) & 0x0FFF;
+    uint8_t T = (high_byte & 0xF0) >> 4; // 4-bit opcode
+    uint8_t X = high_byte & 0x0F;        // 4-bit register identifier
+    uint8_t Y = (low_byte & 0xF0) >> 4;  // 4-bit register identifier
+    uint8_t N = low_byte & 0x0F;         // 4-bit constant
+    uint8_t NN = low_byte;               // 8-bit constant
+    uint16_t NNN = ((high_byte << 8) | low_byte) & 0x0FFF; // 12-bit address
 
     // Decode current instruction
+
+    unsigned int flag;
     switch (T) {
     case 0x0:
-      switch (KK) {
+      int flag;
+      switch (NN) {
       case 0xE0: // 00E0 - CLS
         // Clear the display
         std::fill(this->display.begin(), this->display.end(), false);
@@ -129,15 +126,15 @@ void CHIP8::advance() {
       this->PC = NNN;
       break;
     case 0x3:
-      // 3XKK - SE VX, byte
-      // Skip next instruction if VX = KK
-      if (this->V[X] == KK)
+      // 3XNN - SE VX, byte
+      // Skip next instruction if VX = NN
+      if (this->V[X] == NN)
         this->PC += 2;
       break;
     case 0x4:
-      // 4XKK - SNE VX, byte
-      // Skip next instruction if VX != KK
-      if (this->V[X] != KK)
+      // 4XNN - SNE VX, byte
+      // Skip next instruction if VX != NN
+      if (this->V[X] != NN)
         this->PC += 2;
       break;
     case 0x5:
@@ -147,14 +144,14 @@ void CHIP8::advance() {
         this->PC += 2;
       break;
     case 0x6:
-      // 6XKK - LD VX, byte
-      // Set VX = KK
-      this->V[X] = KK;
+      // 6XNN - LD VX, byte
+      // Set VX = NN
+      this->V[X] = NN;
       break;
     case 0x7:
-      // 7XKK - ADD VX, byte
-      // Set VX = VX + KK
-      this->V[X] += KK;
+      // 7XNN - ADD VX, byte
+      // Set VX = VX + NN
+      this->V[X] += NN;
       break;
     case 0x8:
       switch (N) {
@@ -180,31 +177,34 @@ void CHIP8::advance() {
       case 0x4: // 8XY4 - ADD VX, VY
         // Set VX = VX + VY, set VF = carry
         // If carry VF = 1 else VF = 0
-        this->V[0xF] =
-            (uint16_t)this->V[X] + (uint16_t)this->V[Y] > 0xFF ? 1 : 0;
+        flag = (uint16_t)this->V[X] + (uint16_t)this->V[Y] > 0xFF ? 1 : 0;
         // Only store low byte of the result
         this->V[X] += this->V[Y];
+        this->V[0xF] = flag;
         break;
       case 0x5: // 8XY5 - SUB VX, VY
         // If VX > VY, VF = 1 else VF = 0
         // Set VX = VX - VY, set VF = NOT borrow
-        this->V[0xF] = this->V[X] > this->V[Y] ? 1 : 0;
+        flag = this->V[X] >= this->V[Y] ? 1 : 0;
         this->V[X] -= this->V[Y];
+        this->V[0xF] = flag;
         break;
       case 0x6: // 8XY6 - SHR VX {, VY}
         // Set VX = VX SHR 1
         // If least-significant bit of VX is 1, VF = 1 else VF = 0, then VX >>
         // 1
         // Flag if least-significant bit will be lost
-        this->V[0xF] = this->V[X] & 0b1;
-        // Shift VX right once
+        flag = this->V[X] & 0b1;
+        // Shift VY right once and save in VX
         this->V[X] >>= 1;
+        this->V[0xF] = flag;
         break;
       case 0x7: // 8XY7 - SUBN VX, VY
         // Set VX = VY - VX, set VF = NOT borrow
         // IF VY > VX, then VF = 1 else VF = 0
-        this->V[0xF] = this->V[Y] > this->V[X] ? 1 : 0;
+        flag = this->V[Y] >= this->V[X] ? 1 : 0;
         this->V[X] = this->V[Y] - this->V[X];
+        this->V[0xF] = flag;
         break;
       case 0xE: // 8XYE - SHL VX {, VY}
         // Set VX = VY SHL 1
@@ -213,9 +213,10 @@ void CHIP8::advance() {
         // If most-significant bit of VX is 1, VF = 1 else VF = 0, then VX <<
         // 1
         // Flag if most-significant bit will be lost
-        this->V[0xF] = (this->V[X] >> 7) & 0b1;
+        flag = (this->V[X] >> 7) & 0b1;
         // Shift VX left once
         this->V[X] <<= 1;
+        this->V[0xF] = flag;
         break;
       default:
         break;
@@ -234,9 +235,9 @@ void CHIP8::advance() {
       // Jump to location NNN + V0
       this->PC = NNN + this->V[0x0];
       break;
-    case 0xC: // CXKK - RND VX, byte
-      // Set VX = random byte AND KK
-      this->V[X] = (rand() % 256) & KK;
+    case 0xC: // CXNN - RND VX, byte
+      // Set VX = random byte AND NN
+      this->V[X] = (rand() % 256) & NN;
       break;
     case 0xD: // DXYN - DRW VX, VY, nibble
       // TODO: Go over this implementation again to verify correctness
@@ -262,7 +263,8 @@ void CHIP8::advance() {
           bool sprite_bit = (sprite_byte >> (7 - b)) & 0b1;
           // When screen and sprite pixels are on, set collision flag
           // because xor causes erasures when both values are on
-          if (this->display[CHIP8::screen_width * y + x] && sprite_bit)
+          if ((this->display[CHIP8::screen_width * y + x] == 1) &&
+              (sprite_bit == 1))
             this->V[0xF] = 1;
           // XOR bit onto screen
           this->display[CHIP8::screen_width * y + x] =
@@ -271,23 +273,23 @@ void CHIP8::advance() {
       }
       break;
     case 0xE:
-      switch (KK) {
+      switch (NN) {
       case (0x9E): // EX9E - SKP
         // TODO: Need to implement keyboard handling first
         // Skip next instruction if key with the value of VX is pressed
-        std::cerr << "Instruction EX9E not implemented..." << std::endl;
+        std::cerr << "[ERROR] Instruction EX9E not implemented..." << std::endl;
         break;
       case (0xA1): // EXA1 - SKNP VX
         // TODO: Need to implement keyboard handling first
         // Skip next instruction if key with the value of VX is not pressed
-        std::cerr << "Instruction EXA1 not implemented..." << std::endl;
+        std::cerr << "[ERROR] Instruction EXA1 not implemented..." << std::endl;
         break;
       default:
         break;
       }
       break;
     case 0xF:
-      switch (KK) {
+      switch (NN) {
       case 0x07: // FX07 - LD VX, DT
         // Set VX = delay timer value
         this->V[X] = this->DT;
@@ -295,7 +297,7 @@ void CHIP8::advance() {
       case 0x0A: // FX0A - LD VX, K
         // TODO: Need to implement keyboard handling first
         // Wait for key press then save value to VX
-        std::cerr << "Instruction FX0A not implemented..." << std::endl;
+        std::cerr << "[ERROR] Instruction FX0A not implemented..." << std::endl;
         break;
       case 0x15: // FX15 - LD DT, VX
         // FX15 - LD DT, VX

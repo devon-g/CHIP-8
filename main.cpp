@@ -15,9 +15,6 @@ int main(int argc, char **argv) {
   CHIP8 c8;
   c8.load_rom(argv[1]);
 
-  // Collect rectangles to be drawn
-  std::vector<SDL_Rect> rects;
-
   bool quit = false;
   while (!quit) {
     // Non blocking polling for sdl2 events
@@ -31,6 +28,8 @@ int main(int argc, char **argv) {
 
     // Convert chip8 display pixels to sdl rectangles
     auto display = c8.get_display();
+    // Collect rectangles to be drawn
+    std::vector<SDL_Rect> rects;
     for (int i = 0; i < display.size(); i++) {
       if (display[i]) {
         rects.push_back(SDL_Rect{(i % (int)CHIP8::screen_width) * cell_size,
@@ -49,9 +48,10 @@ int main(int argc, char **argv) {
     SDL_RenderPresent(sdl.renderer);
 
     // Interpret next instruction from rom
-    c8.advance();
+    c8.step();
   }
 
+  std::cout << "[INFO] Quitting..." << std::endl;
   shutdown_sdl(sdl);
   return 0;
 }

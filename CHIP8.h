@@ -2,8 +2,8 @@
 // Created by devon on 6/22/22.
 //
 
-#ifndef CHIP_8_CHIP8_H
-#define CHIP_8_CHIP8_H
+#ifndef CHIP8_H
+#define CHIP8_H
 
 #include <array>
 #include <cinttypes>
@@ -19,7 +19,7 @@ public:
 
   CHIP8();
   void load_rom(const char *filename);
-  void advance();
+  void step();
   const std::array<bool, CHIP8::screen_width * CHIP8::screen_height> &
   get_display();
 
@@ -44,4 +44,4 @@ private:
   uint8_t ST; // Sound
 };
 
-#endif // CHIP_8_CHIP8_H
+#endif
