@@ -3,17 +3,15 @@
 #include "backends/imgui_impl_sdlrenderer2.h"
 #include "display.h"
 #include "graphics.h"
-#include "imgui.h"
 #include "keyboard.h"
 #include <SDL.h>
 #include <iostream>
 #include <unordered_map>
-#include <vector>
 
 #define DISPLAY_WIDTH 64
 #define DISPLAY_HEIGHT 32
 
-std::unordered_map<char, Key> sdl_to_key{
+static const std::unordered_map<char, Key> sdl_to_key{
     {'0', Key::ZERO},  {'1', Key::ONE},  {'2', Key::TWO}, {'3', Key::THREE},
     {'4', Key::FOUR},  {'5', Key::FIVE}, {'6', Key::SIX}, {'7', Key::SEVEN},
     {'8', Key::EIGHT}, {'9', Key::NINE}, {'a', Key::A},   {'b', Key::B},
@@ -21,39 +19,41 @@ std::unordered_map<char, Key> sdl_to_key{
 };
 
 int main(int argc, char **argv) {
-  const int cell_size = 20;
-  const int window_width = cell_size * DISPLAY_WIDTH;
-  const int window_height = cell_size * DISPLAY_HEIGHT;
+  int cell_size;
+  int *current_width = new int;
+  SDL sdl = init_sdl("CHIP-8", 1280, 720);
 
-  SDL sdl = init_sdl("CHIP-8", window_width, window_height);
-  SDL_Event event;
+  ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+  ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+  ImGui::StyleColorsDark();
 
   Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
   Keyboard keyboard;
   CHIP8 c8(&display, &keyboard);
   c8.load_rom(argv[1]);
 
+  SDL_Event event;
   bool quit = false;
   while (!quit) {
     // Non blocking polling for sdl2 events
     // (e.g. key presses, x button to quit, etc)
     while (SDL_PollEvent(&event)) {
       ImGui_ImplSDL2_ProcessEvent(&event);
-      switch (event.type) {
-      case SDL_QUIT:
+      if (event.type == SDL_QUIT ||
+          (event.type == SDL_WINDOWEVENT &&
+           event.window.event == SDL_WINDOWEVENT_CLOSE &&
+           event.window.windowID == SDL_GetWindowID(sdl.window)))
         quit = true;
-        break;
-      case SDL_KEYDOWN:
-        if (sdl_to_key.count(event.key.keysym.sym)) {
-          keyboard.set_pressed_key(sdl_to_key.at(event.key.keysym.sym));
-          std::cout << "[DEBUG] Key pressed: " << (char)event.key.keysym.sym
-                    << std::endl;
+      if (!ImGui::GetIO().WantCaptureKeyboard) {
+        if (event.type == SDL_KEYDOWN) {
+          if (sdl_to_key.count(event.key.keysym.sym)) {
+            keyboard.set_pressed_key(sdl_to_key.at(event.key.keysym.sym));
+            std::cout << "[DEBUG] Key pressed: " << (char)event.key.keysym.sym
+                      << std::endl;
+          }
         }
-        break;
-      case SDL_KEYUP:
-        keyboard.set_pressed_key(Key::NONE);
-      default:
-        break;
+        if (event.type == SDL_KEYUP)
+          keyboard.set_pressed_key(Key::NONE);
       }
     }
 
@@ -62,6 +62,9 @@ int main(int argc, char **argv) {
     ImGui::NewFrame();
     ImGui::ShowDemoWindow();
 
+    SDL_GetWindowSize(sdl.window, current_width, nullptr);
+    cell_size = *current_width / DISPLAY_WIDTH;
+    SDL_SetWindowSize(sdl.window, *current_width, cell_size * DISPLAY_HEIGHT);
     // Convert chip8 display pixels to sdl rectangles
     auto display_buffer = display.get_buffer();
     // Collect rectangles to be drawn
@@ -74,8 +77,8 @@ int main(int argc, char **argv) {
       }
     }
     ImGui::Render();
-    SDL_RenderSetScale(sdl.renderer, sdl.io.DisplayFramebufferScale.x,
-                       sdl.io.DisplayFramebufferScale.y);
+    SDL_RenderSetScale(sdl.renderer, ImGui::GetIO().DisplayFramebufferScale.x,
+                       ImGui::GetIO().DisplayFramebufferScale.y);
     // Clear old pixels
     SDL_SetRenderDrawColor(sdl.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(sdl.renderer);
@@ -93,5 +96,6 @@ int main(int argc, char **argv) {
 
   std::cout << "[INFO] Quitting..." << std::endl;
   shutdown_sdl(sdl);
+  delete current_width;
   return 0;
 }

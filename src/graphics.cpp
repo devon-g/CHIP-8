@@ -1,7 +1,6 @@
 #include "graphics.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_sdlrenderer2.h"
-#include "imgui.h"
 #include <iostream>
 
 SDL init_sdl(std::string title, uint w, uint h) {
@@ -10,8 +9,9 @@ SDL init_sdl(std::string title, uint w, uint h) {
     std::cerr << "[ERROR] SDL_Init: " << SDL_GetError() << std::endl;
 
   // Window to render things onto
-  SDL_Window *window = SDL_CreateWindow("CHIP-8", SDL_WINDOWPOS_UNDEFINED,
-                                        SDL_WINDOWPOS_UNDEFINED, w, h, 0);
+  SDL_Window *window =
+      SDL_CreateWindow("CHIP-8", SDL_WINDOWPOS_UNDEFINED,
+                       SDL_WINDOWPOS_UNDEFINED, w, h, SDL_WINDOW_RESIZABLE);
   if (window == nullptr)
     std::cerr << "[ERROR] SDL_CreateWindow: " << SDL_GetError() << std::endl;
 
@@ -26,16 +26,10 @@ SDL init_sdl(std::string title, uint w, uint h) {
 
   // Set up ImGui stuff
   ImGui::CreateContext();
-  ImGuiIO &io = ImGui::GetIO();
-  (void)io;
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-  io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-
-  ImGui::StyleColorsDark();
   ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
   ImGui_ImplSDLRenderer2_Init(renderer);
 
-  return {window, renderer, io};
+  return {window, renderer};
 }
 
 void shutdown_sdl(SDL sdl) {
