@@ -1,6 +1,6 @@
-#include "CHIP8.h"
-#include "display.h"
-#include "keyboard.h"
+#include "chip8.hpp"
+#include "display.hpp"
+#include "keyboard.hpp"
 #include <fstream>
 #include <iostream>
 
@@ -11,10 +11,11 @@ CHIP8::CHIP8(Display *display, Keyboard *keyboard) {
 
   // Initialize standalone registers to zero
   this->PC = CHIP8::program_start_address;
-  this->SP = 0;
-  this->I = 0;
-  this->DT = 0;
-  this->ST = 0;
+  this->opcode = 0x0;
+  this->SP = 0x0;
+  this->I = 0x0;
+  this->DT = 0x0;
+  this->ST = 0x0;
 
   // Load fontset
   std::array<uint8_t, CHIP8::fontset_size> font{
@@ -72,8 +73,7 @@ void CHIP8::step() {
     // Fetch the current instruction.
     // Instructions are two bytes long and stored most-significant-byte first.
     // The first byte of each instruction should be located at an even address.
-    uint8_t high_byte = this->memory[this->PC];
-    uint8_t low_byte = this->memory[this->PC + 1];
+    this->opcode = (this->memory[this->PC] << 8) | this->memory[this->PC + 1];
 
     // Increment to next instruction
     this->PC += 2;
@@ -88,12 +88,12 @@ void CHIP8::step() {
     // N: 0x000F
     // NN: 0x00FF
     // NNN: 0x0FFF
-    uint8_t T = (high_byte & 0xF0) >> 4; // 4-bit opcode
-    uint8_t X = high_byte & 0x0F;        // 4-bit register identifier
-    uint8_t Y = (low_byte & 0xF0) >> 4;  // 4-bit register identifier
-    uint8_t N = low_byte & 0x0F;         // 4-bit constant
-    uint8_t NN = low_byte;               // 8-bit constant
-    uint16_t NNN = ((high_byte << 8) | low_byte) & 0x0FFF; // 12-bit address
+    uint8_t T = (opcode & 0xF000) >> 12;
+    uint8_t X = (opcode & 0x0F00) >> 8; // register
+    uint8_t Y = (opcode & 0x00F0) >> 4; // register
+    uint8_t N = opcode & 0x000F;        // nibble
+    uint8_t NN = opcode & 0x00FF;       // byte
+    uint16_t NNN = opcode & 0x0FFF;     // memory address
 
     // Decode current instruction
 

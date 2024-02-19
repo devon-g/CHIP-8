@@ -1,9 +1,10 @@
-#include "CHIP8.h"
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_sdlrenderer2.h"
-#include "display.h"
-#include "graphics.h"
-#include "keyboard.h"
+#include "chip8.hpp"
+#include "display.hpp"
+#include "graphics.hpp"
+#include "imgui.h"
+#include "keyboard.hpp"
 #include <SDL.h>
 #include <iostream>
 #include <unordered_map>
@@ -60,7 +61,44 @@ int main(int argc, char **argv) {
     ImGui_ImplSDLRenderer2_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
-    ImGui::ShowDemoWindow();
+
+    // ImGui::ShowDemoWindow();
+
+    {
+      if (ImGui::Begin("Debug")) {
+        if (ImGui::CollapsingHeader("CHIP8")) {
+          if (ImGui::BeginTable("Registers", 2,
+                                ImGuiTableFlags_Borders +
+                                    ImGuiTableFlags_Resizable)) {
+            ImGui::TableSetupColumn("Register");
+            ImGui::TableSetupColumn("Value");
+            ImGui::TableHeadersRow();
+            for (int row = 0; row < c8.V.size(); row++) {
+              ImGui::TableNextRow();
+              ImGui::TableNextColumn();
+              ImGui::Text("V%X", row);
+              ImGui::TableNextColumn();
+              ImGui::Text("0x%X", c8.V[row]);
+            }
+          }
+          ImGui::EndTable();
+
+          ImGui::Text("Opcode: 0x%x", c8.opcode);
+          ImGui::Text("PC: 0x%x", c8.PC);
+          ImGui::Text("SP: 0x%x", c8.SP);
+          ImGui::Text("I: 0x%x", c8.I);
+          ImGui::Text("DT: 0x%x", c8.DT);
+          ImGui::Text("ST: 0x%x", c8.ST);
+        }
+        if (ImGui::CollapsingHeader("Display")) {
+        }
+        if (ImGui::CollapsingHeader("Keyboard")) {
+          ImGui::Text("Pressed: %3x", keyboard.get_pressed_key());
+        }
+      }
+
+      ImGui::End();
+    }
 
     SDL_GetWindowSize(sdl.window, current_width, nullptr);
     cell_size = *current_width / DISPLAY_WIDTH;

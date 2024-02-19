@@ -1,18 +1,18 @@
 cmake_minimum_required(VERSION 3.8)
-project(CHIP8)
+project(chip8)
 
 find_package(SDL2)
 
 set(SOURCES
   src/main.cpp
-  src/CHIP8.cpp
+  src/chip8.cpp
   src/graphics.cpp
   src/display.cpp
   src/keyboard.cpp
-  include/CHIP8.h
-  include/graphics.h
-  include/display.h
-  include/keyboard.h)
+  include/chip8.hpp
+  include/graphics.hpp
+  include/display.hpp
+  include/keyboard.hpp)
 
 set(IMGUI_SOURCES
   imgui/imgui.cpp
