@@ -9,10 +9,12 @@ set(SOURCES
   src/graphics.cpp
   src/display.cpp
   src/keyboard.cpp
+  src/interpreter.cpp
   include/chip8.hpp
   include/graphics.hpp
   include/display.hpp
-  include/keyboard.hpp)
+  include/keyboard.hpp
+  include/interpreter.hpp)
 
 set(IMGUI_SOURCES
   imgui/imgui.cpp

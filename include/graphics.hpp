@@ -1,15 +1,12 @@
-#ifndef GRAPHICS_H
-#define GRAPHICS_H
+#ifndef GRAPHICS_HPP
+#define GRAPHICS_HPP
 
 #include <SDL.h>
 #include <string>
 
-struct SDL {
-  SDL_Window *window;
-  SDL_Renderer *renderer;
-};
-
-SDL init_sdl(std::string title, uint w, uint h);
-void shutdown_sdl(SDL sdl);
+void init_sdl(std::string title, SDL_Window **window, SDL_Renderer **renderer);
+void shutdown_sdl(SDL_Window *window, SDL_Renderer *renderer);
+void init_imgui(SDL_Window *window, SDL_Renderer *renderer);
+void shutdown_imgui();
 
 #endif

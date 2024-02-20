@@ -1,33 +1,17 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
 
-enum Key {
-  ZERO,
-  ONE,
-  TWO,
-  THREE,
-  FOUR,
-  FIVE,
-  SIX,
-  SEVEN,
-  EIGHT,
-  NINE,
-  A,
-  B,
-  C,
-  D,
-  E,
-  F,
-  NONE
-};
-
 class Keyboard {
 public:
-  void set_pressed_key(Key key);
-  Key get_pressed_key();
+  Keyboard() : pressed(false), key(0x0) {}
+  void set_key(int key);
+  int get_key();
+  void set_key_pressed(bool pressed);
+  bool key_is_pressed();
 
 private:
-  Key pressed = Key::NONE;
+  bool pressed;
+  int key;
 };
 
 #endif

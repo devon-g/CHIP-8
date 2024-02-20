@@ -12,7 +12,7 @@ public:
   static const uint16_t fontset_start_address = 0x50;
   static const uint16_t program_start_address = 0x200;
 
-  CHIP8(Display *display, Keyboard *keyboard);
+  void init(Display *display, Keyboard *keyboard);
   void load_rom(const char *filename);
   void step();
 

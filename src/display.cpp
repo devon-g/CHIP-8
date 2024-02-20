@@ -3,14 +3,18 @@
 #include <iostream>
 #include <vector>
 
-Display::Display(unsigned int width, unsigned int height) {
-  this->width = width;
-  this->height = height;
-  this->buffer.resize(width * height);
+Display::Display() : width(64), height(32) {
+  this->buffer.resize(this->width * this->height);
   this->clear_buffer();
 }
 
-const std::vector<bool> &Display::get_buffer() { return this->buffer; }
+Display::Display(unsigned int width, unsigned int height)
+    : width(width), height(height) {
+  this->buffer.resize(this->width * this->height);
+  this->clear_buffer();
+}
+
+std::vector<bool> &Display::get_buffer() { return this->buffer; }
 
 void Display::clear_buffer() {
   std::fill(this->buffer.begin(), this->buffer.end(), false);
@@ -36,5 +40,5 @@ bool Display::get_pixel(unsigned int x, unsigned int y) {
   return this->buffer[pixel];
 }
 
-const unsigned int Display::get_width() { return this->width; }
-const unsigned int Display::get_height() { return this->height; }
+unsigned int Display::get_width() { return this->width; }
+unsigned int Display::get_height() { return this->height; }

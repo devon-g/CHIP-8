@@ -1,10 +1,9 @@
 #include "chip8.hpp"
 #include "display.hpp"
 #include "keyboard.hpp"
-#include <fstream>
-#include <iostream>
+#include <cstdlib>
 
-CHIP8::CHIP8(Display *display, Keyboard *keyboard) {
+void CHIP8::init(Display *display, Keyboard *keyboard) {
   // Plug in peripherals
   this->display = display;
   this->keyboard = keyboard;
@@ -42,31 +41,6 @@ CHIP8::CHIP8(Display *display, Keyboard *keyboard) {
     this->memory[CHIP8::fontset_start_address + i] = font[i];
 }
 
-void CHIP8::load_rom(const char *filename) {
-  // Open the rom
-  std::streampos rom_size;
-  std::ifstream rom(filename, std::ios::binary);
-
-  if (rom.is_open()) {
-    // Get rom size
-    rom.seekg(0, std::ios::end);
-    rom_size = rom.tellg();
-    rom.seekg(0, std::ios::beg);
-
-    // Reserve space for the rom data
-    auto *rom_data = new uint8_t[rom_size];
-    rom.read((char *)rom_data, rom_size);
-    rom.close();
-
-    for (int i = 0; i < rom_size; i++)
-      this->memory[CHIP8::program_start_address + i] = rom_data[i];
-
-    delete[] rom_data;
-  } else {
-    std::cerr << "[ERROR] Failed to load rom" << std::endl;
-  }
-}
-
 void CHIP8::step() {
   // Execute one instruction
   if (this->PC < 0xFFF) {
@@ -98,7 +72,7 @@ void CHIP8::step() {
     // Decode current instruction
 
     unsigned int flag;
-    Key pressed_key;
+    int pressed_key;
     switch (T) {
     case 0x0:
       int flag;
@@ -283,14 +257,14 @@ void CHIP8::step() {
       switch (NN) {
       case (0x9E): // EX9E - SKP
         // Skip next instruction if key with the value of VX is pressed
-        pressed_key = this->keyboard->get_pressed_key();
-        if (pressed_key != Key::NONE && pressed_key == this->V[X])
+        pressed_key = this->keyboard->get_key();
+        if (this->keyboard->key_is_pressed() && pressed_key == this->V[X])
           this->PC += 2;
         break;
       case (0xA1): // EXA1 - SKNP VX
         // Skip next instruction if key with the value of VX is not pressed
-        pressed_key = this->keyboard->get_pressed_key();
-        if (pressed_key != Key::NONE && pressed_key != this->V[X])
+        pressed_key = this->keyboard->get_key();
+        if (this->keyboard->key_is_pressed() && pressed_key != this->V[X])
           this->PC += 2;
         break;
       default:
@@ -305,12 +279,9 @@ void CHIP8::step() {
         break;
       case 0x0A: // FX0A - LD VX, K
         // Wait for key press then save value to VX
-        while (true) {
-          pressed_key = this->keyboard->get_pressed_key();
-          if (pressed_key != Key::NONE)
-            break;
+        while (!this->keyboard->key_is_pressed()) {
         }
-        this->V[X] = pressed_key;
+        this->V[X] = this->keyboard->get_key();
         break;
       case 0x15: // FX15 - LD DT, VX
         // FX15 - LD DT, VX
