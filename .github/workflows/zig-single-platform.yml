@@ -1,0 +1,10 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build and Test
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - uses: mlugg/setup-zig@v1
+    - run: zig build test
