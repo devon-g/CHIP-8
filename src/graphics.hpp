@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <string>
 
 struct SDL {

@@ -1,22 +1,27 @@
-#include "backends/imgui_impl_sdl2.h"
-#include "backends/imgui_impl_sdlrenderer2.h"
+#include "SDL3/SDL_render.h"
+#include "backends/imgui_impl_sdl3.h"
+#include "backends/imgui_impl_sdlrenderer3.h"
 #include "chip8.hpp"
 #include "display.hpp"
 #include "graphics.hpp"
 #include "imgui.h"
 #include "keyboard.hpp"
-#include <SDL.h>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
+#include <algorithm>
 #include <iostream>
 #include <unordered_map>
 
 #define DISPLAY_WIDTH 64
 #define DISPLAY_HEIGHT 32
 
-static const std::unordered_map<char, Key> sdl_to_key{
-    {'0', Key::ZERO},  {'1', Key::ONE},  {'2', Key::TWO}, {'3', Key::THREE},
-    {'4', Key::FOUR},  {'5', Key::FIVE}, {'6', Key::SIX}, {'7', Key::SEVEN},
-    {'8', Key::EIGHT}, {'9', Key::NINE}, {'a', Key::A},   {'b', Key::B},
-    {'c', Key::C},     {'d', Key::D},    {'e', Key::E},   {'f', Key::F},
+static const std::unordered_map<SDL_Keycode, Key> sdl_to_key{
+    {SDLK_0, Key::ZERO},  {SDLK_1, Key::ONE},   {SDLK_2, Key::TWO},
+    {SDLK_3, Key::THREE}, {SDLK_4, Key::FOUR},  {SDLK_5, Key::FIVE},
+    {SDLK_6, Key::SIX},   {SDLK_7, Key::SEVEN}, {SDLK_8, Key::EIGHT},
+    {SDLK_9, Key::NINE},  {SDLK_A, Key::A},     {SDLK_B, Key::B},
+    {SDLK_C, Key::C},     {SDLK_D, Key::D},     {SDLK_E, Key::E},
+    {SDLK_F, Key::F},
 };
 
 int main(int argc, char **argv) {
@@ -39,27 +44,26 @@ int main(int argc, char **argv) {
     // Non blocking polling for sdl2 events
     // (e.g. key presses, x button to quit, etc)
     while (SDL_PollEvent(&event)) {
-      ImGui_ImplSDL2_ProcessEvent(&event);
-      if (event.type == SDL_QUIT ||
-          (event.type == SDL_WINDOWEVENT &&
-           event.window.event == SDL_WINDOWEVENT_CLOSE &&
+      ImGui_ImplSDL3_ProcessEvent(&event);
+      if (event.type == SDL_EVENT_QUIT ||
+          (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED &&
            event.window.windowID == SDL_GetWindowID(sdl.window)))
         quit = true;
       if (!ImGui::GetIO().WantCaptureKeyboard) {
-        if (event.type == SDL_KEYDOWN) {
-          if (sdl_to_key.count(event.key.keysym.sym)) {
-            keyboard.set_pressed_key(sdl_to_key.at(event.key.keysym.sym));
-            std::cout << "[DEBUG] Key pressed: " << (char)event.key.keysym.sym
+        if (event.type == SDL_EVENT_KEY_DOWN) {
+          if (sdl_to_key.count(event.key.key)) {
+            keyboard.set_pressed_key(sdl_to_key.at(event.key.key));
+            std::cout << "[DEBUG] Key pressed: " << (char)event.key.key
                       << std::endl;
           }
         }
-        if (event.type == SDL_KEYUP)
+        if (event.type == SDL_EVENT_KEY_UP)
           keyboard.set_pressed_key(Key::NONE);
       }
     }
 
-    ImGui_ImplSDLRenderer2_NewFrame();
-    ImGui_ImplSDL2_NewFrame();
+    ImGui_ImplSDLRenderer3_NewFrame();
+    ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
 
     // ImGui::ShowDemoWindow();
@@ -106,27 +110,30 @@ int main(int argc, char **argv) {
     // Convert chip8 display pixels to sdl rectangles
     auto display_buffer = display.get_buffer();
     // Collect rectangles to be drawn
-    std::vector<SDL_Rect> rects;
-    for (int i = 0; i < display_buffer.size(); i++) {
-      if (display_buffer[i]) {
-        rects.push_back(SDL_Rect{(i % (int)display.get_width()) * cell_size,
-                                 (i / (int)display.get_width()) * cell_size,
-                                 cell_size, cell_size}); // {x * w, y * w, w, h}
-      }
-    }
+    std::vector<uint32_t> pixels(display_buffer.size());
+    // Convert true to white and false to black
+    std::transform(
+        display_buffer.cbegin(), display_buffer.cend(), pixels.begin(),
+        [](bool state) -> uint32_t { return state ? 0xFFFFFFFF : 0xFF000000; });
+
     ImGui::Render();
-    SDL_RenderSetScale(sdl.renderer, ImGui::GetIO().DisplayFramebufferScale.x,
-                       ImGui::GetIO().DisplayFramebufferScale.y);
+
     // Clear old pixels
     SDL_SetRenderDrawColor(sdl.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(sdl.renderer);
-    // Render white rectangles representing pixels
-    SDL_SetRenderDrawColor(sdl.renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-    SDL_RenderFillRects(sdl.renderer, rects.data(), rects.size());
 
-    ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
+    // Turn pixel color data into a texture that fills the entire renderer
+    auto texture = SDL_CreateTexture(sdl.renderer, SDL_PIXELFORMAT_ARGB8888,
+                                     SDL_TEXTUREACCESS_STATIC, DISPLAY_WIDTH,
+                                     DISPLAY_HEIGHT);
+    SDL_UpdateTexture(texture, nullptr, pixels.data(), DISPLAY_WIDTH * 4);
+    SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
+    SDL_RenderTexture(sdl.renderer, texture, nullptr, nullptr);
+
+    ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), sdl.renderer);
     // Update window to match rendered shapes
     SDL_RenderPresent(sdl.renderer);
+    SDL_DestroyTexture(texture);
 
     // Interpret next instruction from rom
     c8.step();
