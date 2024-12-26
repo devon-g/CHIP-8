@@ -1,4 +1,3 @@
-#include "SDL3/SDL_render.h"
 #include "backends/imgui_impl_sdl3.h"
 #include "backends/imgui_impl_sdlrenderer3.h"
 #include "chip8.hpp"
@@ -9,7 +8,6 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <algorithm>
-#include <iostream>
 #include <unordered_map>
 
 #define DISPLAY_WIDTH 64
@@ -25,12 +23,11 @@ static const std::unordered_map<SDL_Keycode, Key> sdl_to_key{
 };
 
 int main(int argc, char **argv) {
-  int cell_size;
-  int *current_width = new int;
-  SDL sdl = init_sdl("CHIP-8", 1280, 720);
+  SDL sdl = init_sdl("CHIP-8", 1280, 640);
 
-  ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-  ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+  ImGuiIO &io = ImGui::GetIO();
+  io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+  io.IniFilename = nullptr;
   ImGui::StyleColorsDark();
 
   Display display(DISPLAY_WIDTH, DISPLAY_HEIGHT);
@@ -47,14 +44,15 @@ int main(int argc, char **argv) {
       ImGui_ImplSDL3_ProcessEvent(&event);
       if (event.type == SDL_EVENT_QUIT ||
           (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED &&
-           event.window.windowID == SDL_GetWindowID(sdl.window)))
+           event.window.windowID == SDL_GetWindowID(sdl.window))) {
         quit = true;
+      }
+      // Only send input to chip8 if imgui isn't capturing already
       if (!ImGui::GetIO().WantCaptureKeyboard) {
         if (event.type == SDL_EVENT_KEY_DOWN) {
           if (sdl_to_key.count(event.key.key)) {
             keyboard.set_pressed_key(sdl_to_key.at(event.key.key));
-            std::cout << "[DEBUG] Key pressed: " << (char)event.key.key
-                      << std::endl;
+            SDL_LogDebug(0, "[DEBUG] Key pressed: %c\n", event.key.key);
           }
         }
         if (event.type == SDL_EVENT_KEY_UP)
@@ -104,19 +102,15 @@ int main(int argc, char **argv) {
       ImGui::End();
     }
 
-    SDL_GetWindowSize(sdl.window, current_width, nullptr);
-    cell_size = *current_width / DISPLAY_WIDTH;
-    SDL_SetWindowSize(sdl.window, *current_width, cell_size * DISPLAY_HEIGHT);
     // Convert chip8 display pixels to sdl rectangles
     auto display_buffer = display.get_buffer();
     // Collect rectangles to be drawn
-    std::vector<uint32_t> pixels(display_buffer.size());
+    std::vector<uint32_t> pixels(display_buffer.size(), 0);
     // Convert true to white and false to black
     std::transform(
         display_buffer.cbegin(), display_buffer.cend(), pixels.begin(),
         [](bool state) -> uint32_t { return state ? 0xFFFFFFFF : 0xFF000000; });
 
-    ImGui::Render();
 
     // Clear old pixels
     SDL_SetRenderDrawColor(sdl.renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
@@ -130,17 +124,17 @@ int main(int argc, char **argv) {
     SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
     SDL_RenderTexture(sdl.renderer, texture, nullptr, nullptr);
 
+    ImGui::Render();
     ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), sdl.renderer);
-    // Update window to match rendered shapes
     SDL_RenderPresent(sdl.renderer);
+
     SDL_DestroyTexture(texture);
 
     // Interpret next instruction from rom
     c8.step();
   }
 
-  std::cout << "[INFO] Quitting..." << std::endl;
+  SDL_LogInfo(0, "[INFO] Quitting...\n");
   shutdown_sdl(sdl);
-  delete current_width;
   return 0;
 }
